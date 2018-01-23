@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans default-lazy-init="false">
+	<bean id="poolConfig" class="redis.clients.jedis.JedisPoolConfig">
+		<!-- 保持的最大活跃连接数 -->
+		<property name="maxTotal" value="50" />
+		<!-- 最大的空闲连接数 -->
+		<property name="maxIdle" value="10" />
+		<!-- 最大的等待连接数 -->
+		<property name="maxWaitMillis" value="20" />
+		<!-- 最小的空闲连接数 -->
+		<property name="minIdle" value="3" />
+		<!-- 是否开启建立时验证，如果验证失败，将不加入队列 -->
+		<property name="testOnBorrow" value="true" />
+		<!-- 是否开启放回队列时验证，如果验证失败，将不加入队列 -->
+		<property name="testOnReturn" value="true" />
+		<!-- 是否开启等待状态转换到活动状态时验证，如果验证失败，将不加入队列 -->
+		<property name="testWhileIdle" value="true" />
+		<!-- 连接耗尽时是否阻塞, false报异常,ture阻塞直到超时, 默认true-->
+		<property name="blockWhenExhausted" value="true" />
+	</bean>
+	<bean id="redisPool" class="redis.clients.jedis.JedisPool">
+		<constructor-arg>
+			<ref bean="poolConfig" />
+		</constructor-arg>
+		<constructor-arg>
+			<value>${redis.url}</value>
+		</constructor-arg>
+		<constructor-arg>
+			<value>${redis.port}</value>
+		</constructor-arg>
+		<constructor-arg>
+			<value>${redis.timeOut}</value>
+		</constructor-arg>
+		<constructor-arg>
+			<value>${redis.name}</value>
+		</constructor-arg>
+	</bean>
+	<bean id="jedisClient" class="com.lock.util.redis.JedisClient">
+		<property name="pool" ref="redisPool" />
+		<property name="db" value="0" />
+	</bean>
+	
+	<bean id="jedisUtil" class="com.lock.util.redis.JedisUtil">
+		<property name="jedisClient" ref="jedisClient" />
+	</bean>
+	
+</beans>
