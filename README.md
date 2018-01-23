@@ -1,5 +1,12 @@
 # rLock
 利用redis Set实现redis分布式锁
+需要手动打包，然后pom中引用如下：
+<dependency>
+    <groupId>com.lock</groupId>
+    <artifactId>rlock</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+</dependency>
+
 使用示例：
     
     // name 唯一标识 建议 类名+方法名，默认为""
